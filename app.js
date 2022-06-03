@@ -88,7 +88,10 @@ class App {
       );
     }
 
-    if (e.clientY > (this.clientHeight * 4) / 5) {
+    if (
+      e.clientY > (this.clientHeight * 4) / 5 ||
+      this.tipText.innerText === 'Press Spacebar to unlock.'
+    ) {
       this.tip.classList.remove('tipDisappear');
       this.tip.classList.add('tipAppear');
     } else {
