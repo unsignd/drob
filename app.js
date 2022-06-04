@@ -82,7 +82,7 @@ class App {
             ? this.clientWidth
             : e.clientX) /
             this.clientWidth) *
-            9 +
+            1 +
             1
         )
       );
