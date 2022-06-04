@@ -50,10 +50,14 @@ class App {
           this.isLocked = !this.isLocked;
           if (this.tipText.innerText === 'Press Spacebar to unlock.') {
             this.tipText.innerText = 'Press Spacebar to draw.';
+            this.tip.classList.remove('tipDisappear');
+            this.tip.classList.add('tipAppear');
           } else {
             this.isMoved = false;
             this.lastAngle = this.angle;
             this.tipText.innerText = 'Press Spacebar to unlock.';
+            this.tip.classList.remove('tipAppear');
+            this.tip.classList.add('tipDisappear');
           }
         }
       },
