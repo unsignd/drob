@@ -21,9 +21,12 @@ class App {
     this.canvas.width = this.clientWidth * 2;
     this.canvas.height = this.clientHeight * 2;
     this.ctx.scale(2, 2);
+    this.reductionMultiply = 1;
 
     this.platform = [];
+    this.angle = 1;
     this.isLocked = true;
+    this.isMoved = false;
 
     for (let x = 0; x < 10; x++) {
       for (let y = 0; y < 10; y++) {
@@ -35,7 +38,7 @@ class App {
 
     this.platform.forEach((platform) => {
       platform.resize(this.clientWidth, this.clientHeight);
-      platform.rotate(1);
+      platform.rotate(this.angle);
     });
 
     window.addEventListener('resize', this.resize.bind(this), false);
@@ -46,8 +49,10 @@ class App {
         if (e.code === 'Space') {
           this.isLocked = !this.isLocked;
           if (this.tipText.innerText === 'Press Spacebar to unlock.') {
-            this.tipText.innerText = 'Press Spacebar to lock.';
+            this.tipText.innerText = 'Press Spacebar to draw.';
           } else {
+            this.isMoved = false;
+            this.lastAngle = this.angle;
             this.tipText.innerText = 'Press Spacebar to unlock.';
           }
         }
@@ -73,19 +78,29 @@ class App {
   }
 
   rotate(e) {
-    if (!this.isLocked) {
-      this.platform.forEach((platform) =>
-        platform.rotate(
-          ((e.clientX < this.clientWidth / 1000
-            ? 0
-            : e.clientX > (this.clientWidth / 20) * 999
-            ? this.clientWidth
-            : e.clientX) /
-            this.clientWidth) *
-            1 +
-            1
-        )
-      );
+    if (!this.isLocked && this.syncEnded) {
+      this.isMoved = true;
+      this.angle =
+        ((e.clientX < this.clientWidth / 1000
+          ? 0
+          : e.clientX > (this.clientWidth / 20) * 999
+          ? this.clientWidth
+          : e.clientX) /
+          this.clientWidth) *
+          1 +
+        1;
+
+      this.platform.forEach((platform) => platform.rotate(this.angle));
+    } else {
+      this.lastAngle =
+        ((e.clientX < this.clientWidth / 1000
+          ? 0
+          : e.clientX > (this.clientWidth / 20) * 999
+          ? this.clientWidth
+          : e.clientX) /
+          this.clientWidth) *
+          1 +
+        1;
     }
 
     if (
@@ -103,6 +118,28 @@ class App {
   animate() {
     this.ctx.clearRect(0, 0, this.clientWidth, this.clientHeight);
     this.platform.forEach((platform) => platform.draw(this.ctx));
+
+    if (this.isLocked && this.angle > 1) {
+      this.angle -= 0.01 * this.reductionMultiply;
+      this.reductionMultiply += 0.125;
+      this.platform.forEach((platform) => platform.rotate(this.angle));
+    } else if (this.isLocked) {
+      this.angle = 1;
+      this.reductionMultiply = 1;
+      this.platform.forEach((platform) => platform.rotate(this.angle));
+    }
+
+    if (!this.isLocked && this.angle < this.lastAngle && !this.isMoved) {
+      this.angle += 0.01 * this.reductionMultiply;
+      this.reductionMultiply += 0.125;
+      this.platform.forEach((platform) => platform.rotate(this.angle));
+      this.syncEnded = false;
+    } else if (!this.isLocked && !this.isMoved) {
+      this.angle = this.lastAngle;
+      this.reductionMultiply = 1;
+      this.platform.forEach((platform) => platform.rotate(this.angle));
+      this.syncEnded = true;
+    }
 
     requestAnimationFrame(this.animate.bind(this));
   }
