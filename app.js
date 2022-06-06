@@ -27,6 +27,8 @@ class App {
     this.angle = 1;
     this.isLocked = true;
     this.isMoved = false;
+    this.isClicked = false;
+    this.hNum = 0;
 
     for (let x = 0; x < 10; x++) {
       for (let y = 0; y < 10; y++) {
@@ -43,6 +45,8 @@ class App {
 
     window.addEventListener('resize', this.resize.bind(this), false);
     window.addEventListener('mousemove', this.rotate.bind(this), false);
+    window.addEventListener('mousedown', () => (this.isClicked = true), false);
+    window.addEventListener('mouseup', () => (this.isClicked = false), false);
     window.addEventListener(
       'keydown',
       (e) => {
@@ -82,6 +86,33 @@ class App {
   }
 
   rotate(e) {
+    if (this.isClicked && this.isLocked) {
+      this.platform.forEach((platform) => {
+        if (
+          e.clientX >= platform.center.x - platform.minPart / 8 &&
+          e.clientX <= platform.center.x + platform.minPart / 8 &&
+          e.clientY >= platform.center.y - platform.minPart / 8 &&
+          e.clientY <= platform.center.y + platform.minPart / 8 &&
+          platform.xIndex > 1 &&
+          platform.xIndex < 8 &&
+          platform.yIndex > 1 &&
+          platform.yIndex < 8
+        ) {
+          platform.selected(
+            e.clientX,
+            e.clientY,
+            platform.center.x,
+            platform.center.y,
+            `hsl(${this.hNum}, 100%, 76%)`
+          );
+
+          if (++this.hNum > 600) {
+            this.hNum = 0;
+          }
+        }
+      });
+    }
+
     if (!this.isLocked && this.syncEnded) {
       this.isMoved = true;
       this.angle =

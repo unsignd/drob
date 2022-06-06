@@ -85,9 +85,42 @@ export default class Platform {
     this.drawMethod(ctx, 2, this.minPart / 32);
     ctx.fill();
     ctx.closePath();
+
+    ctx.globalAlpha = 1;
+    this.dots.forEach((dot) => {
+      ctx.fillStyle = dot.color;
+      ctx.beginPath();
+      ctx.arc(
+        dot.x -
+          (((dot.platformY - dot.y) / dot.platformY) *
+            this.minPart *
+            (this.angle - 1)) /
+            (this.angle * 5) +
+          (this.angle === 1
+            ? 0
+            : ((dot.platformX - dot.x) * (this.angle - 1)) / 3.75),
+        dot.y +
+          (((dot.platformX - dot.x) / dot.platformX) *
+            this.minPart *
+            (this.angle - 1)) /
+            (this.angle * 2.5) +
+          (this.angle === 1
+            ? 0
+            : ((dot.platformY - dot.y) * (this.angle - 1)) / 3.75),
+        10 / Math.pow(this.angle, 0.75),
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+      ctx.closePath();
+    });
   }
 
   drawMethod(ctx, type, plusVal = 0) {
     ctx.lineTo(this.xType[type] + plusVal, this.yType[type] + plusVal);
+  }
+
+  selected(x, y, platformX, platformY, color) {
+    this.dots.push({ x, y, platformX, platformY, color });
   }
 }
