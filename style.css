@@ -27,6 +27,13 @@ canvas {
   height: 100%;
 }
 
+a {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  cursor: pointer;
+}
+
 div {
   position: absolute;
   bottom: 5%;
