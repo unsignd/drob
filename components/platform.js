@@ -107,7 +107,7 @@ export default class Platform {
           (this.angle === 1
             ? 0
             : ((dot.platformY - dot.y) * (this.angle - 1)) / 3.75),
-        10 / Math.pow(this.angle, 0.75),
+        20 / Math.pow(this.angle, 0.75),
         0,
         Math.PI * 2
       );

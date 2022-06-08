@@ -94,9 +94,9 @@ class App {
           e.clientY >= platform.center.y - platform.minPart / 8 &&
           e.clientY <= platform.center.y + platform.minPart / 8 &&
           platform.xIndex > 1 &&
-          platform.xIndex < 8 &&
-          platform.yIndex > 1 &&
-          platform.yIndex < 8
+          platform.xIndex < 7 &&
+          platform.yIndex > 2 &&
+          platform.yIndex < 6
         ) {
           platform.selected(
             e.clientX,
@@ -106,7 +106,8 @@ class App {
             `hsl(${this.hNum}, 100%, 76%)`
           );
 
-          if (++this.hNum > 600) {
+          this.hNum += 0.25;
+          if (this.hNum > 600) {
             this.hNum = 0;
           }
         }
