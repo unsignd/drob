@@ -61,7 +61,7 @@ class App {
     );
 
     this.tip.addEventListener(
-      'touchend',
+      'touchstart',
       () => {
         this.isLocked = !this.isLocked;
         if (this.tipText.innerText === 'Press Spacebar to unlock.') {
