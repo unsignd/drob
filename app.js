@@ -60,6 +60,23 @@ class App {
       false
     );
 
+    this.tip.addEventListener(
+      'touchend',
+      () => {
+        this.isLocked = !this.isLocked;
+        if (this.tipText.innerText === 'Press Spacebar to unlock.') {
+          this.tipText.innerText = 'Press Spacebar to draw.';
+        } else {
+          this.isMoved = false;
+          this.lastAngle = this.angle;
+          this.tipText.innerText = 'Press Spacebar to unlock.';
+          this.tip.classList.remove('tipDisappear');
+          this.tip.classList.add('tipAppear');
+        }
+      },
+      false
+    );
+
     window.addEventListener('resize', this.resize.bind(this), false);
     window.addEventListener('mousemove', this.rotate.bind(this), false);
     window.addEventListener('mousedown', () => (this.isClicked = true), false);
